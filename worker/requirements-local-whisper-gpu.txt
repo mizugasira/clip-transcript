@@ -1,0 +1,5 @@
+# GPU (NVIDIA, CUDA 12) for TRANSCRIBER=faster_whisper with FW_DEVICE=cuda.
+# Provides cublas64_12.dll / cudnn64_9.dll; worker registers them on Windows automatically.
+-r requirements-local-whisper.txt
+nvidia-cublas-cu12
+nvidia-cudnn-cu12>=9,<10

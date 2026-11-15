@@ -1,0 +1,41 @@
+# ローカル開発用: PostgreSQL と ワーカー
+#   docker compose up -d db          … DBだけ起動（初回は db/schema.sql が自動で流れる）
+#   docker compose up -d --build     … DB + ワーカーを起動
+# ワーカーのキー類は、このファイルと同じ場所の .env（docker compose が自動で読む）に書く。
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: clips
+    ports:
+      - "54329:5432"
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d clips"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  worker:
+    build: ./worker
+    environment:
+      DATABASE_URL: postgresql://app:app@db:5432/clips
+      TRANSCRIBER: ${TRANSCRIBER:-groq}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      TRANSCRIBE_MODEL: ${TRANSCRIBE_MODEL:-}
+      TRANSCRIBE_LANGUAGE: ${TRANSCRIBE_LANGUAGE:-}
+      TRANSCRIBE_PRICE_PER_MINUTE_USD: ${TRANSCRIBE_PRICE_PER_MINUTE_USD:-}
+      MAX_CLIP_SECONDS: ${MAX_CLIP_SECONDS:-90}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:

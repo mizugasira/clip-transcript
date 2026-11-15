@@ -1,0 +1,4 @@
+# Local PC worker extras: bundled ffmpeg binary (extracts audio only, smaller uploads).
+# Not needed on Vercel or in Docker (Docker uses apt ffmpeg).
+-r requirements.txt
+imageio-ffmpeg>=0.5

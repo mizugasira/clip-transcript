@@ -1,0 +1,5 @@
+# only needed for TRANSCRIBER=faster_whisper (self-hosted Whisper)
+-r requirements-local.txt
+faster-whisper>=1.1
+# av 19 removed the metadata_errors argument that faster-whisper 1.2.1 passes to av.open()
+av<19

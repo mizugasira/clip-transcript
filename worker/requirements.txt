@@ -1,0 +1,7 @@
+# Python 3.10+ required (new yt-dlp releases dropped 3.9).
+# This file is also what Vercel installs, so keep it to runtime deps only.
+# yt-dlp breaks when Twitch changes its internals; keep it updated (pip install -U yt-dlp)
+yt-dlp>=2026.10.26
+psycopg[binary]>=3.2,<4
+openai>=1.40,<3
+flask>=3.1,<4
